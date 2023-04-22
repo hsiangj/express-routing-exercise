@@ -54,6 +54,26 @@ app.get('/mode', function(req, res, next){
   return res.json(response);
 })
 
+app.get('/all', function(req, res, next){
+  debugger;
+  if(!req.query.nums){
+    throw new ExpressError('Please pass in a comma-separated list of numbers.', 400);
+  }
+  let numsStr = req.query.nums.split(',');
+  let nums = convertToNumsArr(numsStr);
+  if (nums instanceof Error){
+    throw new ExpressError(nums.message, 400)
+  }
+
+  let response = {
+    'operation': 'all',
+    'mode': findMode(nums),
+    'mean': findMean(nums),
+    'median': findMedian(nums)
+  } 
+  return res.json(response);
+})
+
 
 app.use(function(req, res, next){
   const e = new ExpressError('Page not found', 404);
